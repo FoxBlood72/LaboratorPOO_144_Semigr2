@@ -30,10 +30,12 @@ public:
 //        return result;
 //    }
     friend Complex operator+ (Complex complex1, Complex complex2);
+    friend Complex operator* (Complex c1, Complex c2);
+    friend Complex operator/ (Complex c1, Complex c2);
 
-    friend Complex operator* (Complex complex1, Complex complex2);
+    //TODO: operatorul *
 
-    friend Complex operator/ (Complex complex1, Complex complex2);
+    //TODO: operatorul /
 
     friend std::istream& operator>> (std::istream& in, Complex& complex);
     friend std::ostream& operator<< (std::ostream& out, const Complex& complex);
@@ -47,24 +49,6 @@ Complex operator+  (Complex complex1, Complex complex2)
     return result;
 }
 
-Complex operator* (Complex complex1, Complex complex2)
-{
-    Complex result;
-    result.m_real = complex1.m_real * complex2.m_real - complex1.m_imaginary * complex2.m_imaginary; // i*i = -1
-    result.m_imaginary = complex1.m_real * complex2.m_imaginary + complex1.m_imaginary * complex2.m_real;
-    return result;
-}
-
-Complex operator/(Complex complex1, Complex complex2)
-{
-    // ((a1*a2+b1*b2)+(a2*b1-a1*b2)i) / a2^2+b2^2
-    Complex result;
-    double numitor = complex2.m_real * complex2.m_real + complex2.m_imaginary * complex2.m_imaginary;
-    result.m_real = (complex1.m_real * complex2.m_real + complex1.m_imaginary * complex2.m_imaginary) / numitor;
-    result.m_imaginary = (complex2.m_real * complex1.m_imaginary - complex1.m_real * complex2.m_imaginary) / numitor;
-    return result;
-}
-
 std::istream& operator>> (std::istream& in, Complex& complex)
 {
     in >> complex.m_real >> complex.m_imaginary;
@@ -73,25 +57,9 @@ std::istream& operator>> (std::istream& in, Complex& complex)
 
 std::ostream& operator<< (std::ostream& out, const Complex& complex)
 {
-    //"a", "i*v", "-i*b", "a+i*b", "a-i*b"
-    if(complex.m_real && complex.m_imaginary)
-    {
-        if(complex.m_imaginary > 0)
-            out << complex.m_real << "+i*" << complex.m_imaginary;
-        else
-            out << complex.m_real << "-i*" << complex.m_imaginary;
-    }
-    else if(complex.m_real == 0)
-    {
-       if(complex.m_imaginary > 0)
-            out << "+i*" << complex.m_imaginary;
-       else
-            out << "-i*" << complex.m_imaginary;
-    }
-    else
-    {
-        out << complex.m_real;
-    }
+    //TODO:
+    out << complex.m_real << ' ' << complex.m_imaginary << 'i';
+    //    "a", "i*a", "-i*a", "a+i*b", "a-i*b"
     return out;
 }
 
@@ -127,7 +95,7 @@ void interactiveMenu() {
     int option = 0;
     int exit_option = 4;
     int n = 0;
-    Complex *numbers = nullptr;
+    Complex *numbers = NULL;
 
     std::cin >> option;
     while(option != exit_option) {
@@ -161,6 +129,23 @@ void interactiveMenu() {
     }
 }
 
+Complex operator* (Complex c1, Complex c2)
+{
+    Complex result;
+    result.m_real = c1.m_real * c2.m_real - c1.m_imaginary * c2.m_imaginary;
+    result.m_imaginary = c1.m_real * c2.m_imaginary + c1.m_imaginary * c2.m_real;
+    return result;
+}
+
+Complex operator/ (Complex c1, Complex c2)
+{
+    Complex r;
+    double numitor = c2.m_real * c2.m_real + c2.m_imaginary * c2.m_imaginary;
+    r.m_real = (c1.m_real * c2.m_real + c1.m_imaginary * c2.m_imaginary) / numitor;
+    r.m_imaginary = (c2.m_real * c1.m_imaginary - c1.m_real * c2.m_imaginary) / numitor;
+    return r;
+}
+
 int main() {
 //    Complex complex(1,2.5);
 //    complex.SetReal(5.2);
@@ -180,6 +165,10 @@ int main() {
 //    std::cin >> c4;
 //    std::cout << c4;
 //    readNComplexNumbers();
+    Complex c1(3, 4);
+    Complex c2(3, 4);
+    std::cout << c1/c2 << std::endl;
     interactiveMenu();
     return 0;
 }
+
